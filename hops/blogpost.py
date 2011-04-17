@@ -36,13 +36,13 @@ class BlogPost(object):
     def generate_header(self):
         if 'title' in self.meta:
             if 'link' in self.meta:
-                self.text = "# [%s](%s) [#](%s)" % (
+                self.text = "# [%s](%s) [#](%s)\n\n" % (
                     self.meta['title'],
                     self.meta['link'],
                     self.get_absolute_url()
                 )
             else:
-                self.text = "# %s" % (self.meta['title'], )
+                self.text = "# %s\n\n" % (self.meta['title'], )
                 
     
     def get_absolute_url(self):
