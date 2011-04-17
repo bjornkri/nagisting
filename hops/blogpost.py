@@ -20,11 +20,29 @@ class BlogPost(object):
                 current_line = self.file_obj.readline().strip()
         else:
             self.text = current_line
+        
+        self.generate_header()
+        
         for current_line in self.file_obj:
             self.text += current_line
         
+        filename = self.file_obj.name.split('/')[-1]
+        self.meta['pubdate'] = filename.split('_')[0]
+        self.meta['slug'] = filename.split('_')[1][:-4]
+        
         self.html = markdown.markdown(self.text)
         
+    
+    def generate_header(self):
+        if 'title' in self.meta:
+            if 'link' in self.meta:
+                self.text = "# [%s](%s)" % (
+                    self.meta['title'],
+                    self.meta['link']
+                )
+            else:
+                self.text = "# %s" % (self.meta['title'], )
+                
     
     def add_meta(self, text):
         name, data = text.split(':')[0], (':'.join(text.split(':')[1:]).strip())
