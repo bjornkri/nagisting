@@ -15,6 +15,7 @@ def main():
         blogposts.append(BlogPost(file_obj))
         file_obj.close()
         
+    index_file = ""
     for blogpost in blogposts:
         filename = "%s%s_%s.php" % (
                 settings.SERVER_ROOT,
@@ -22,7 +23,12 @@ def main():
                 blogpost.meta['slug'])
         f = open(filename, "w")
         f.write(blogpost.html)
-        
+        index_file += blogpost.html
+        f.close()
+    filename = settings.SERVER_ROOT + "main.php"
+    f = open(filename, "w")
+    f.write(index_file)
+    f.close()
 
 if __name__ == "__main__":
     main()

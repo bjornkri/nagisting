@@ -21,14 +21,14 @@ class BlogPost(object):
         else:
             self.text = current_line
         
+        filename = self.file_obj.name.split('/')[-1]
+        self.meta['pubdate'] = filename.split('_')[0]
+        self.meta['slug'] = filename.split('_')[1][:-4]
+        
         self.generate_header()
         
         for current_line in self.file_obj:
             self.text += current_line
-        
-        filename = self.file_obj.name.split('/')[-1]
-        self.meta['pubdate'] = filename.split('_')[0]
-        self.meta['slug'] = filename.split('_')[1][:-4]
         
         self.html = markdown.markdown(self.text)
         
@@ -36,13 +36,20 @@ class BlogPost(object):
     def generate_header(self):
         if 'title' in self.meta:
             if 'link' in self.meta:
-                self.text = "# [%s](%s)" % (
+                self.text = "# [%s](%s) [#](%s)" % (
                     self.meta['title'],
-                    self.meta['link']
+                    self.meta['link'],
+                    self.get_absolute_url()
                 )
             else:
                 self.text = "# %s" % (self.meta['title'], )
                 
+    
+    def get_absolute_url(self):
+        year = self.meta['pubdate'][:4]
+        month = self.meta['pubdate'][4:6]
+        day = self.meta['pubdate'][6:8]
+        return "/%s/%s/%s/%s/" % (year, month, day, self.meta['slug'])
     
     def add_meta(self, text):
         name, data = text.split(':')[0], (':'.join(text.split(':')[1:]).strip())
