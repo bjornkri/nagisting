@@ -1,3 +1,4 @@
+import datetime
 import markdown
 
 class BlogPost(object):
@@ -22,8 +23,10 @@ class BlogPost(object):
             self.text = current_line
         
         filename = self.file_obj.name.split('/')[-1]
-        self.meta['pubdate'] = filename.split('_')[0]
         self.meta['slug'] = filename.split('_')[1][:-4]
+        
+        self.meta['pubdate'] = datetime.datetime.strptime(
+            self.meta['pubdate'], '%a %b %d %H:%M:%S %Y')
         
         self.generate_header()
         
@@ -42,14 +45,16 @@ class BlogPost(object):
                     self.get_absolute_url()
                 )
             else:
-                self.text = "# %s\n\n" % (self.meta['title'], )
-                
+                self.text = "# [%s](%s)\n\n" % (
+                    self.meta['title'], self.get_absolute_url()
+                )
+        self.text += "<p class='date'>%s</p>" % (self.meta['pubdate'].strftime("%a %b %d %Y"),)
     
     def get_absolute_url(self):
-        year = self.meta['pubdate'][:4]
-        month = self.meta['pubdate'][4:6]
-        day = self.meta['pubdate'][6:8]
-        return "/%s/%s/%s/%s/" % (year, month, day, self.meta['slug'])
+        year = self.meta['pubdate'].year
+        month = self.meta['pubdate'].month
+        day = self.meta['pubdate'].day
+        return "/%s/%02d/%02d/%s/" % (year, month, day, self.meta['slug'])
     
     def add_meta(self, text):
         name, data = text.split(':')[0], (':'.join(text.split(':')[1:]).strip())

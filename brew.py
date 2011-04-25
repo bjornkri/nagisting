@@ -8,18 +8,30 @@ import settings
 
 def main():
     blogposts = []
+    blog_index = {}
     for infile in glob.glob(os.path.join(
             settings.SOURCES['published'], '*.txt')
         ):
         file_obj = codecs.open(infile, mode="r", encoding="utf8")
-        blogposts.append(BlogPost(file_obj))
+        blog = BlogPost(file_obj)
+        blogposts.append(blog)
+        year = blog.meta['pubdate'].year
+        month = blog.meta['pubdate'].month
+        if not year in blog_index:
+            blog_index[year] = {}
+        if not month in blog_index[year]:
+            blog_index[year][month] = []
+        blog_index[year][month].append(blog)
         file_obj.close()
         
     index_file = ""
-    for blogpost in blogposts:
-        filename = "%s%s_%s.php" % (
+    blogs = sorted(blogposts, key=lambda blog: blog.meta['pubdate'], reverse=True)
+    for blogpost in blogs:
+        filename = "%s%s%02d%02d_%s.php" % (
                 settings.SERVER_ROOT,
-                blogpost.meta['pubdate'],
+                blogpost.meta['pubdate'].year, 
+                blogpost.meta['pubdate'].month, 
+                blogpost.meta['pubdate'].day,
                 blogpost.meta['slug'])
         f = open(filename, "w")
         f.write(blogpost.html)
@@ -29,6 +41,14 @@ def main():
     f = open(filename, "w")
     f.write(index_file)
     f.close()
-
+    print blog_index
+    for year in blog_index:
+        for month in blog_index[year]:
+            filename = "%s%s%02d.php" % (settings.SERVER_ROOT, year, month)
+            f = open(filename, "w")
+            blogs = sorted(blog_index[year][month], key = lambda blog: blog.meta['pubdate'])
+            for blogpost in blogs:
+                f.write(blogpost.html)
+            f.close()
 if __name__ == "__main__":
     main()

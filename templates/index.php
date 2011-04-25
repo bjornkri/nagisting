@@ -20,7 +20,7 @@
 			}
 		}
 		elseif ($_GET['year'] && $_GET['month']) {
-			$filename = $_GET['year'] . $_GET['month'] . 'archive.php';
+			$filename = $_GET['year'] . $_GET['month'] . '.php';
 			if (file_exists($filename)){
 				include($filename);
 			}
