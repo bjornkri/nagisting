@@ -8,7 +8,7 @@
 </head>
 <body>
 	<div id="header">
-		<h1>Bj&ouml;rn's saga</h1>
+		<h1><a href="/">Bj&ouml;rn's saga</a></h1>
 	</div>
 	<div id="content">
 		<?php

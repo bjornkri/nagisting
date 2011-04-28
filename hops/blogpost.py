@@ -14,13 +14,15 @@ class BlogPost(object):
     
     def parse_file(self):
         current_line = self.file_obj.readline().strip()
-        if current_line == "--------":
+        # Strip possible \ufeff from the first line
+        if current_line[-8:] == "--------": 
             current_line = self.file_obj.readline().strip()
             while not current_line == "--------":
                 self.add_meta(current_line)
                 current_line = self.file_obj.readline().strip()
         else:
             self.text = current_line
+            print "No metadata in %s" % self.file_obj.name
         
         filename = self.file_obj.name.split('/')[-1]
         self.meta['slug'] = filename.split('_')[1][:-4]
