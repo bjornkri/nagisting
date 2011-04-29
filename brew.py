@@ -7,67 +7,34 @@ import PyRSS2Gen
 from hops.blogpost import BlogPost
 import settings
 
-
-def main():
-    blogposts, blog_index = get_blogposts(settings.SOURCES['published'])
-    drafts, draft_index = get_blogposts(settings.SOURCES['drafts'])
-    
-    index_file = ""
-    blogs = sorted(blogposts, key=lambda blog: blog.meta['pubdate'], reverse=True)
-    
-    for blogpost in blogs:
-        filename = "%s%s%02d%02d_%s.php" % (
-                settings.SERVER_ROOT,
-                blogpost.meta['pubdate'].year, 
-                blogpost.meta['pubdate'].month, 
-                blogpost.meta['pubdate'].day,
-                blogpost.meta['slug'])
-        f = open(filename, "w")
-        f.write(blogpost.get_header())
-        f.write(blogpost.html)
-        index_file += blogpost.get_header()
-        index_file += blogpost.html
-        f.close()
-    
-    for draft in drafts:
-        filename = "%sdraft_%s.php" % (
-            settings.SERVER_ROOT,
-            draft.meta['slug']
-        )
-        f = open(filename, "w")
-        f.write(draft.get_header())
-        f.write(draft.html)
-        f.close()
-    
-    filename = settings.SERVER_ROOT + "main.php"
+def write_blog(post, filename):
     f = open(filename, "w")
-    f.write(index_file)
+    blog = post.get_header() + post.html
+    f.write(blog)
     f.close()
-    for year in blog_index:
-        for month in blog_index[year]:
-            filename = "%s%s%02d.php" % (settings.SERVER_ROOT, year, month)
-            f = open(filename, "w")
-            blogs = sorted(blog_index[year][month], key = lambda blog: blog.meta['pubdate'])
-            for blogpost in blogs:
-                f.write(blogpost.get_header())
-                f.write(blogpost.html)
-            f.close()
+    
+def write_index(posts, filename, reverse=False):
+    f = open(filename, "w")
+    index = ""
+    for post in posts:
+        index += post.get_header() + post.html
+    f.write(index)
 
-    # Make RSS
+def write_rss(posts, filename):
     rss_items = []
-    for blog in blogs[:10]:
-        if 'link' in blog.meta:
-            the_link = blog.meta['link']
-            html = blog.html + "\n\n<p><strong><a href='%s'>&beta;</a></strong></p>" % blog.get_absolute_url()
+    for post in posts:
+        if 'link' in post.meta:
+            the_link = post.meta['link']
+            html = post.html + "\n\n<p><strong><a href='%s'>&beta;</a></strong></p>" % post.get_absolute_url()
         else:
-            the_link = blog.get_absolute_url()
-            html = blog.html
+            the_link = post.get_absolute_url()
+            html = post.html
             
         item = PyRSS2Gen.RSSItem(
-            title = blog.meta['title'],
+            title = post.meta['title'],
             link = the_link,
             description = html,
-            pubDate = blog.meta['pubdate'],
+            pubDate = post.meta['pubdate'],
         )
         rss_items.append(item)
     
@@ -79,7 +46,9 @@ def main():
         items = rss_items,
     )
     
-    rss.write_xml(open("%sfeed.rss" % settings.SERVER_ROOT, "w"))
+    rss_file = open(filename, "w")
+    rss.write_xml(rss_file)
+    rss_file.close()
 
 def get_blogposts(path):
     blogposts = []
@@ -100,5 +69,46 @@ def get_blogposts(path):
         file_obj.close()
     return blogposts, blog_index
 
+
+
+def main():
+    blogposts, blog_index = get_blogposts(settings.SOURCES['published'])
+    drafts, draft_index = get_blogposts(settings.SOURCES['drafts'])
+
+    blogs = sorted(blogposts, key=lambda blog: blog.meta['pubdate'], reverse=True)
+
+    # Write individual blog posts
+    for blogpost in blogs:
+        filename = "%s%s%02d%02d_%s.php" % (
+                settings.SERVER_ROOT,
+                blogpost.meta['pubdate'].year, 
+                blogpost.meta['pubdate'].month, 
+                blogpost.meta['pubdate'].day,
+                blogpost.meta['slug'])
+        write_blog(blogpost, filename)
+
+    # Write draft
+    for draft in drafts:
+        filename = "%sdraft_%s.php" % (
+            settings.SERVER_ROOT,
+            draft.meta['slug']
+        )
+        write_blog(draft, filename)
+
+    # Write main index
+    filename = settings.SERVER_ROOT + "main.php"
+    write_index(blogs[:10], filename, True)
+
+    # Write month index
+    for year in blog_index:
+        for month in blog_index[year]:
+            filename = "%s%s%02d.php" % (settings.SERVER_ROOT, year, month)
+            blogs = sorted(blog_index[year][month], key = lambda blog: blog.meta['pubdate'])
+            write_index(blogs, filename)
+
+    # Write RSS
+    write_rss(blogs[:10], "%sfeed.rss" % settings.SERVER_ROOT)
+    
+    
 if __name__ == "__main__":
     main()
