@@ -30,27 +30,26 @@ class BlogPost(object):
         self.meta['pubdate'] = datetime.datetime.strptime(
             self.meta['pubdate'], '%a %b %d %H:%M:%S %Y')
         
-        self.generate_header()
-        
         for current_line in self.file_obj:
             self.text += current_line
         
         self.html = markdown.markdown(self.text)
         
     
-    def generate_header(self):
+    def get_header(self):
         if 'title' in self.meta:
             if 'link' in self.meta:
-                self.text = "# [%s](%s) [#](%s)\n\n" % (
-                    self.meta['title'],
+                ret_val = "<h1><a href='%s' class='ext'>%s</a> <a href='%s' class='bs'>&beta;</a></h1>\n\n" % (
                     self.meta['link'],
+                    self.meta['title'],
                     self.get_absolute_url()
                 )
             else:
-                self.text = "# [%s](%s)\n\n" % (
-                    self.meta['title'], self.get_absolute_url()
+                ret_val = "<h1><a href='%s' class='bs'>%s</a></h1>\n\n" % (
+                    self.get_absolute_url(), self.meta['title']
                 )
-        self.text += "<p class='date'>%s</p>" % (self.meta['pubdate'].strftime("%a %b %d %Y"),)
+        ret_val += "<div class='date'>%s</div>" % (self.meta['pubdate'].strftime("%b %d %Y"),)
+        return ret_val
     
     def get_absolute_url(self):
         year = self.meta['pubdate'].year

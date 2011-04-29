@@ -1,6 +1,8 @@
 import os
 import glob
 import codecs
+import datetime
+import PyRSS2Gen
 
 from hops.blogpost import BlogPost
 import settings
@@ -21,7 +23,9 @@ def main():
                 blogpost.meta['pubdate'].day,
                 blogpost.meta['slug'])
         f = open(filename, "w")
+        f.write(blogpost.get_header())
         f.write(blogpost.html)
+        index_file += blogpost.get_header()
         index_file += blogpost.html
         f.close()
     
@@ -31,6 +35,7 @@ def main():
             draft.meta['slug']
         )
         f = open(filename, "w")
+        f.write(draft.get_header())
         f.write(draft.html)
         f.close()
     
@@ -44,8 +49,37 @@ def main():
             f = open(filename, "w")
             blogs = sorted(blog_index[year][month], key = lambda blog: blog.meta['pubdate'])
             for blogpost in blogs:
+                f.write(blogpost.get_header())
                 f.write(blogpost.html)
             f.close()
+
+    # Make RSS
+    rss_items = []
+    for blog in blogs[:10]:
+        if 'link' in blog.meta:
+            the_link = blog.meta['link']
+            html = blog.html + "\n\n<p><strong><a href='%s'>&beta;</a></strong></p>" % blog.get_absolute_url()
+        else:
+            the_link = blog.get_absolute_url()
+            html = blog.html
+            
+        item = PyRSS2Gen.RSSItem(
+            title = blog.meta['title'],
+            link = the_link,
+            description = html,
+            pubDate = blog.meta['pubdate'],
+        )
+        rss_items.append(item)
+    
+    rss = PyRSS2Gen.RSS2(
+        title = "bjornssaga.com",
+        link = "http://bjornssaga.com",
+        description = "Latest entries from bjornssaga.com",
+        lastBuildDate = datetime.datetime.utcnow(),
+        items = rss_items,
+    )
+    
+    rss.write_xml(open("%sfeed.rss" % settings.SERVER_ROOT, "w"))
 
 def get_blogposts(path):
     blogposts = []
