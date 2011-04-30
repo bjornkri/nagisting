@@ -34,7 +34,9 @@ def write_rss(posts, filename):
             title = post.meta['title'],
             link = the_link,
             description = html,
-            pubDate = post.meta['pubdate'],
+            # Temporary fix: I'm on Brussels time, which is 2 hours ahead of 
+            # UTC. Proper timezone support will be added later.
+            pubDate = post.meta['pubdate'] - datetime.timedelta(0,0,0,0,0,2,0),
         )
         rss_items.append(item)
     
@@ -103,8 +105,8 @@ def main():
     for year in blog_index:
         for month in blog_index[year]:
             filename = "%s%s%02d.php" % (settings.SERVER_ROOT, year, month)
-            blogs = sorted(blog_index[year][month], key = lambda blog: blog.meta['pubdate'])
-            write_index(blogs, filename)
+            blogs_by_month = sorted(blog_index[year][month], key = lambda blog: blog.meta['pubdate'])
+            write_index(blogs_by_month, filename)
 
     # Write RSS
     write_rss(blogs[:10], "%sfeed.rss" % settings.SERVER_ROOT)
