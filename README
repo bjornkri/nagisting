@@ -1,9 +1,24 @@
-Requires a 404.php and a symbolic link to the index.php file in the webroot.
+# Instructions
 
-Requires the following rewrites:
+This should get you going, but be warned that the code is not very generic or reusable in its current state.
 
-    RewriteEngine on
-    RewriteBase /
-    
-    RewriteRule ^([0-9]{4})/([0-9]{2})/([0-9]{2})/([a-z\-]+)/$ /index.php?year=$1&month=$2&day=$3&slug=$4 [L]
-    RewriteRule ^([0-9]{4})/([0-9]{2})/$ /index.php?year=$1&month=$2 [L]
+* Update the settings file to point to your drafts and published folder, and your webroot.
+
+* Add a symbolic link to the index.php file in the webroot.
+
+* Add a 404.php to the webroot.
+
+* Update the index.php file to set the name and structure of your site.
+
+* Update the hops/blogpost.py file to generate your headers and RSS footers how you want them.
+
+* Set up rewrites, for instance:
+
+	RewriteEngine on
+	RewriteBase /
+
+	RewriteRule ^([0-9]{4})/([0-9]{2})/([0-9]{2})/([0-9a-z\-]+)/$ /index.php?year=$1&month=$2&day=$3&slug=$4 [L]
+	RewriteRule ^([0-9]{4})/([0-9]{2})/$ /index.php?year=$1&month=$2 [L]
+	RewriteRule ^drafts/([0-9a-z\-]+)/$ /index.php?draft=1&slug=$1 [L]
+
+* Set up a crontab to run brew.py at regular intervals.
