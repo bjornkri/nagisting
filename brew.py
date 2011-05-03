@@ -10,6 +10,7 @@ import settings
 def write_blog(post, filename):
     f = open(filename, "w")
     blog = post.get_header() + post.html
+    blog = blog.encode('utf-8')
     f.write(blog)
     f.close()
     

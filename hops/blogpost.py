@@ -7,8 +7,8 @@ class BlogPost(object):
     def __init__(self, infile):
         super(BlogPost, self).__init__()
         self.meta = {}
-        self.text = ""
-        self.html = ""
+        self.text = u""
+        self.html = u""
         self.parse_file(infile)
         
     
@@ -19,7 +19,7 @@ class BlogPost(object):
         if current_line[-8:] == "--------": 
             current_line = file_obj.readline().strip()
             while not current_line == "--------":
-                self.add_meta(current_line)
+                self.add_meta(current_line.encode('ascii', 'xmlcharrefreplace'))
                 current_line = file_obj.readline().strip()
         else:
             self.text = current_line
@@ -32,7 +32,7 @@ class BlogPost(object):
             self.meta['pubdate'], '%a %b %d %H:%M:%S %Y')
         
         for current_line in file_obj:
-            self.text += current_line
+            self.text += current_line.encode('ascii', 'xmlcharrefreplace')
         file_obj.close()
         
         self.html = markdown.markdown(self.text)
@@ -41,9 +41,9 @@ class BlogPost(object):
     def get_header(self):
         if 'title' in self.meta:
             if 'link' in self.meta:
-                ret_val = "<h1><a href='%s' class='ext'>%s</a> <a href='%s' class='bs'>&beta;</a></h1>\n\n" % (
+                ret_val = u"<h1><a href='%s' class='ext'>%s</a> <a href='%s' class='bs'>&beta;</a></h1>\n\n" % (
                     self.meta['link'],
-                    self.meta['title'],
+                    self.meta['title'].encode('ascii', 'xmlcharrefreplace'),
                     self.get_absolute_url()
                 )
             else:
