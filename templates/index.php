@@ -67,7 +67,7 @@
 			<h2>This</h2>
 			<p>An artisanal baked blog. Source is <a href='http://github.com/bjornkri/nagisting'>publicly available</a>, and mostly unreadable.</p>
 			<h2>Context</h2>
-			<p>I was born in <a href='http://en.wikipedia.org/wiki/Akureyri'>Akureyri</a>, married an Italian from <a href='http://en.wikipedia.org/wiki/Orvieto'>Orvieto</a> and we live with our daughter in <a href='http://en.wikipedia.org/wiki/Ghent'>Ghent</a>.</p>
+			<p>I was born in <a href='http://en.wikipedia.org/wiki/Akureyri'>Akureyri</a>, married an <a href='http://en.wikipedia.org/wiki/Orvieto'>Orvietana</a> and we live with our daughter in <a href='http://en.wikipedia.org/wiki/Ghent'>Ghent</a>.</p>
 		</div>
 	</div>
 </body>

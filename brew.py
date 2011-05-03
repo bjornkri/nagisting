@@ -19,6 +19,7 @@ def write_index(posts, filename, reverse=False):
     for post in posts:
         index += post.get_header() + post.html
     f.write(index)
+    f.close()
 
 def write_rss(posts, filename):
     rss_items = []
@@ -44,7 +45,7 @@ def write_rss(posts, filename):
         title = "bjornssaga.com",
         link = "http://bjornssaga.com",
         description = "Latest entries from bjornssaga.com",
-        lastBuildDate = datetime.datetime.utcnow(),
+        lastBuildDate = posts[0].meta['pubdate'] - datetime.timedelta(0,0,0,0,0,2,0),
         items = rss_items,
     )
     
@@ -58,8 +59,7 @@ def get_blogposts(path):
     for infile in glob.glob(os.path.join(
             path, '*.txt')
         ):
-        file_obj = codecs.open(infile, mode="r", encoding="utf8")
-        blog = BlogPost(file_obj)
+        blog = BlogPost(infile)
         blogposts.append(blog)
         year = blog.meta['pubdate'].year
         month = blog.meta['pubdate'].month
@@ -68,7 +68,6 @@ def get_blogposts(path):
         if not month in blog_index[year]:
             blog_index[year][month] = []
         blog_index[year][month].append(blog)
-        file_obj.close()
     return blogposts, blog_index
 
 
