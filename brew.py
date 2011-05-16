@@ -25,7 +25,7 @@ def write_index(posts, filename, archive=None, reverse=False):
     f.close()
     
 def generate_archive(index):
-    archive_html = "<h2>Archives</h2>\n<ul>\n"
+    archive_html = "\n<div class='archive'>\n<h2>Archives</h2>\n<ul>\n"
     for year in sorted(index, reverse=True):
         for month in sorted(index[year], reverse=True):
             archive_date = datetime.date(year, month, 1)
@@ -35,7 +35,7 @@ def generate_archive(index):
                 archive_date.strftime('%B %Y')
                 )
             archive_html += archive_line
-    return archive_html + "</ul>"
+    return archive_html + "</ul></div>"
 
 def write_rss(posts, filename):
     rss_items = []

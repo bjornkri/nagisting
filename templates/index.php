@@ -61,14 +61,17 @@
 			?>
 		</div>
 		<div id="sidebar" class="sidenote">
-			<h1>Stats</h1>
-			<h2>Me</h2>
+			<h1>Me</h1>
 			<p>Independent web developer with a degree in language technology. I like Apple products and complex beers.</p>
-			<h2>This</h2>
+			<h1>This</h1>
 			<p>An artisanal baked blog. Source is <a href='http://github.com/bjornkri/nagisting'>publicly available</a>, and mostly unreadable.</p>
-			<h2>Context</h2>
+			<h1>Context</h1>
 			<p>I was born in <a href='http://en.wikipedia.org/wiki/Akureyri'>Akureyri</a>, married an <a href='http://en.wikipedia.org/wiki/Orvieto'>Orvietana</a> and we live with our daughter in <a href='http://en.wikipedia.org/wiki/Ghent'>Ghent</a>.</p>
 		</div>
+	</div>
+	<div id="footer">
+		<p><a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /></a><br />All original content is licensed under the <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>. except that which is quoted from elsewhere or attributed to others. In short, you may reproduce, reblog, and modify my content, but you must provide proper attribution.</p>
+		<p>brewed by <a href="http://github.com/bjornkri/nagisting">nagisting</a>. Theme based on <a href="http://type-a-file.com/">Type-a-file</a></p>
 	</div>
 </body>
 </html>
