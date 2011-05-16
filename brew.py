@@ -14,13 +14,28 @@ def write_blog(post, filename):
     f.write(blog)
     f.close()
     
-def write_index(posts, filename, reverse=False):
+def write_index(posts, filename, archive=None, reverse=False):
     f = open(filename, "w")
     index = ""
     for post in posts:
         index += post.get_header() + post.html
+    if archive:
+        index += archive
     f.write(index)
     f.close()
+    
+def generate_archive(index):
+    archive_html = "<h2>Archives</h2>\n<ul>\n"
+    for year in sorted(index, reverse=True):
+        for month in sorted(index[year], reverse=True):
+            archive_date = datetime.date(year, month, 1)
+            archive_line = "\t<li><a href='/%s/%02d/'>%s</a></li>\n" % (
+                year, 
+                month, 
+                archive_date.strftime('%B %Y')
+                )
+            archive_html += archive_line
+    return archive_html + "</ul>"
 
 def write_rss(posts, filename):
     rss_items = []
@@ -97,20 +112,22 @@ def main():
         )
         write_blog(draft, filename)
 
-    # Write main index
-    filename = settings.SERVER_ROOT + "main.php"
-    write_index(blogs[:10], filename, True)
+    # Generate archive index block
+    archive = generate_archive(blog_index)
 
     # Write month index
     for year in blog_index:
         for month in blog_index[year]:
             filename = "%s%s%02d.php" % (settings.SERVER_ROOT, year, month)
             blogs_by_month = sorted(blog_index[year][month], key = lambda blog: blog.meta['pubdate'])
-            write_index(blogs_by_month, filename)
+            write_index(blogs_by_month, filename, archive)
 
     # Write RSS
     write_rss(blogs[:10], "%sfeed.rss" % settings.SERVER_ROOT)
-    
+
+    # Write main index
+    filename = settings.SERVER_ROOT + "main.php"
+    write_index(blogs[:20], filename, archive, True)
     
 if __name__ == "__main__":
     main()
