@@ -17,13 +17,17 @@ class BlogPost(object):
         file_obj = codecs.open(infile, mode="r", encoding="utf8")
         current_line = file_obj.readline().strip()
         while len(current_line):
+            # Strip occasional strange artifact from Elements
             if current_line[0] == u'\ufeff':
                 current_line = current_line[1:]
             self.add_meta(current_line.encode('ascii', 'xmlcharrefreplace'))
             current_line = file_obj.readline().strip()
 
         filename = file_obj.name.split('/')[-1]
-        self.meta['slug'] = filename.split('_')[1][:-4]
+        try:
+            self.meta['slug'] = filename.split('_')[1][:-4]
+        except IndexError:
+            self.meta['slug'] = filename[:-4]
 
         self.meta['pubdate'] = datetime.datetime.strptime(
             self.meta['pubdate'], '%a %b %d %H:%M:%S %Y')

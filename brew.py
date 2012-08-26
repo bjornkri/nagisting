@@ -3,6 +3,8 @@ import glob
 import codecs
 import datetime
 import PyRSS2Gen
+import re
+import shutil
 
 from hops.blogpost import BlogPost
 import settings
@@ -88,9 +90,22 @@ def get_blogposts(path):
     return blogposts, blog_index
 
 
+def publish_drafts():
+    for f in glob.glob(os.path.join(settings.SOURCES['drafts'], '*.txt')):
+        filename = f.split('/')[-1]
+        if re.match('^pub_', filename):
+            post = BlogPost(f)
+            new_name = "%s%02d%02d_%s.txt" % (
+                post.meta['pubdate'].year,
+                post.meta['pubdate'].month,
+                post.meta['pubdate'].day,
+                post.meta['slug'])
+            shutil.move(f, os.path.join(settings.SOURCES['published'], new_name))
+
 def main():
-    blogposts, blog_index = get_blogposts(settings.SOURCES['published'])
+    publish_drafts()
     drafts, draft_index = get_blogposts(settings.SOURCES['drafts'])
+    blogposts, blog_index = get_blogposts(settings.SOURCES['published'])
 
     blogs = sorted(blogposts, key=lambda blog: blog.meta['pubdate'], reverse=True)
 
@@ -106,7 +121,7 @@ def main():
 
     # Write draft
     for draft in drafts:
-        filename = "%sdraft_%s.php" % (
+        filename = "%sdrafts/%s.php" % (
             settings.SERVER_ROOT,
             draft.meta['slug']
         )
