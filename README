@@ -2,6 +2,10 @@
 
 This should get you going, but be warned that the code is not very generic or reusable in its current state.
 
+* pip install -r requirements.txt - you might want to do this within your virtualenv
+
+* Install MultiMarkdown https://github.com/fletcher/peg-multimarkdown
+
 * Update the settings file to point to your drafts and published folder, and your webroot.
 
 * Add a symbolic link to the index.php file in the webroot.

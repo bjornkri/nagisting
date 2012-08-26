@@ -29,7 +29,7 @@
 		<div id="content">
 			<?php
 			if ($_GET['draft'] && $_GET['slug']) {
-				$filename = 'draft_' . $_GET['slug'] . '.php';
+				$filename = 'drafts/' . $_GET['slug'] . '.php';
 				if (file_exists($filename)){
 					include($filename);
 				}
