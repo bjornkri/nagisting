@@ -39,7 +39,7 @@ class BlogPost(object):
     def get_header(self):
         if 'title' in self.meta:
             if 'link' in self.meta:
-                ret_val = u"<h1><a href='%s' class='ext'>%s</a> <a href='%s' class='bs'>&rarr;</a></h1>\n\n" % (
+                ret_val = u"<h1><a href='%s' class='ext'>%s</a> <a href='%s' class='bs'>#</a></h1>\n\n" % (
                     self.meta['link'],
                     self.meta['title'].encode('ascii', 'xmlcharrefreplace'),
                     self.get_absolute_url()
