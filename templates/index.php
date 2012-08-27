@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<link rel="stylesheet" href="/media/css/reset.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<link rel="stylesheet" href="/media/css/taf-kickoff-m.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<link rel="stylesheet" href="/media/css/main.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="/media/css/bootstrap.css" rel="stylesheet">
+	<link rel="stylesheet" href="/media/css/bootstrap-responsive.css" rel="stylesheet">
+	<link rel="stylesheet" href="/media/css/main.css" rel="stylesheet">
 	<title>bj&ouml;rnssaga</title>
 	<link rel="alternate" type="application/rss+xml" title="RSS"
 	      href="http://bjornssaga.com/feed.rss">
@@ -22,11 +22,8 @@
 	</script>
 </head>
 <body>
-	<div id="header">
-		<h1><a href="/"><span class="beta">&beta;</span>bj&ouml;rnssaga</a></h1>
-	</div>
-	<div id="main">
-		<div id="content">
+	<div id="main" class='row'>
+		<div id="content" class='offset2 span6'>
 			<?php
 			if ($_GET['draft'] && $_GET['slug']) {
 				$filename = 'drafts/' . $_GET['slug'] . '.php';
@@ -60,18 +57,22 @@
 			}
 			?>
 		</div>
-		<div id="sidebar" class="sidenote">
-			<h1>Me</h1>
+		<div id="sidebar" class="sidebar span2">
+			<h2><a href="/"><span>b</span>j&ouml;rnssaga</a></h2>
+			<h3>Me</h3>
 			<p>Independent web developer with a degree in language technology. I like Apple products and complex beers.</p>
-			<h1>This</h1>
+			<h3>This</h3>
 			<p>An artisanal baked blog. Source is <a href='http://github.com/bjornkri/nagisting'>publicly available</a>, and mostly unreadable.</p>
-			<h1>Context</h1>
+			<h3>Context</h3>
 			<p>I was born in <a href='http://en.wikipedia.org/wiki/Akureyri'>Akureyri</a>, married an <a href='http://en.wikipedia.org/wiki/Orvieto'>Orvietana</a> and we live with our daughter in <a href='http://en.wikipedia.org/wiki/Ghent'>Ghent</a>.</p>
 		</div>
 	</div>
-	<div id="footer">
-		<p><a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /></a><br />All original content is licensed under the <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>. except that which is quoted from elsewhere or attributed to others. In short, you may reproduce, reblog, and modify my content, but you must provide proper attribution.</p>
-		<p>brewed by <a href="http://github.com/bjornkri/nagisting">nagisting</a>. Theme based on <a href="http://type-a-file.com/">Type-a-file</a></p>
+	<div id="footer" class="row">
+		<div class="offset2 span8">
+			<p><a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /></a><br />All original content is licensed under the <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>. except that which is quoted from elsewhere or attributed to others. In short, you may reproduce, reblog, and modify my content, but you must provide proper attribution.</p>
+			<p>brewed by <a href="http://github.com/bjornkri/nagisting">nagisting</a>. Built with <a href="http://twitter.github.com/bootstrap/">Bootstrap</a></p>
+		</div>
 	</div>
+	<script src='/media/js/bootstrap.js'></script>
 </body>
 </html>
